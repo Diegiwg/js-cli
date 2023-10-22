@@ -8,14 +8,17 @@ import (
 // Save the runtime and package manager in a config file insider the project root
 func SaveConfig(rt string, pm string) {
 
+	// try to remove the old config file
+	_ = os.Remove(".js-cli-config")
+
 	file, err := os.OpenFile(".js-cli-config", os.O_SYNC|os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
 		panic(err)
 	}
-
 	defer file.Close()
 
-	_, err = file.WriteString("Runtime:" + rt + "\n" + "PackageManager:" + pm)
+	options := "Runtime:" + rt + "\n" + "PackageManager:" + pm
+	_, err = file.WriteString(options)
 	if err != nil {
 		panic(err)
 	}

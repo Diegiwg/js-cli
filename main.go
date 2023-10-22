@@ -1,14 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/Diegiwg/js-cli/pkg/cmd"
-	"github.com/Diegiwg/js-cli/pkg/config"
+	"github.com/Diegiwg/js-cli/pkg/console"
+	"github.com/Diegiwg/js-cli/pkg/state"
 )
 
-func command(arg string, args *[]string) bool {
+func command(arg string, args *[]string) {
+
+	state.Init()
 
 	switch arg {
 	case "init", "i":
@@ -16,19 +18,25 @@ func command(arg string, args *[]string) bool {
 			cmd.Init(args)
 		}
 
+	case "install", "add":
+		{
+			cmd.Install(args)
+		}
+
 	default:
 		{
-			fmt.Println("Unknown command: " + arg)
+			cmd.Helper(args)
 		}
 	}
 
-	return true
 }
 
 func main() {
+	console.Clear()
+	cmd.RegisterAllCommands()
 
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: js-cli <command> [args]")
+		cmd.Helper(&os.Args)
 		os.Exit(1)
 	}
 
@@ -40,7 +48,4 @@ func main() {
 	}
 
 	command(cmd, &args)
-
-	x, y := config.LoadConfig()
-	fmt.Println(x, y)
 }
