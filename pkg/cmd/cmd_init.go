@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/Diegiwg/js-cli/pkg/config"
@@ -8,15 +9,25 @@ import (
 	"github.com/Diegiwg/js-cli/pkg/state"
 )
 
+var initCmd = flag.NewFlagSet("init", flag.ExitOnError)
+var runtimeArg = initCmd.String("rt", "", "Runtime")
+var packageManagerArg = initCmd.String("pm", "", "Package Manager")
+
 func Init(args *[]string) {
+	initCmd.Parse(*args)
+
 	type initArgsType struct {
 		Runtime        string
 		PackageManager string
 	}
 
 	initArgs := initArgsType{}
-	if *args != nil || len(*args) != 0 {
-		// TODO: parse args
+	if *runtimeArg != "" {
+		initArgs.Runtime = *runtimeArg
+	}
+
+	if *packageManagerArg != "" {
+		initArgs.PackageManager = *packageManagerArg
 	}
 
 	fmt.Println("Initializing js-cli...")
