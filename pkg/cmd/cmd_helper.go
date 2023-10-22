@@ -1,16 +1,13 @@
 package cmd
 
 import (
-	"flag"
 	"fmt"
 	"os"
 )
 
-var helperCmd = flag.NewFlagSet("helper", flag.ExitOnError)
+// ! In this case, the command note receive any flags.
 
 func Helper(args *[]string) {
-
-	helperCmd.Parse(*args)
 
 	fmt.Println("Welcome to js-cli! Here's how you can use it:")
 	fmt.Println("Usage: js-cli <command> [options]")
