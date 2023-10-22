@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/Diegiwg/js-cli/pkg/config"
 	"github.com/Diegiwg/js-cli/pkg/console"
@@ -103,7 +104,9 @@ func Init(args *[]string) {
 	fmt.Println("PackageManager: " + initArgs.PackageManager)
 
 	config.SaveConfig(initArgs.Runtime, initArgs.PackageManager)
-	state.Init()
+
+	state.Runtime = initArgs.Runtime
+	state.PackageManager = initArgs.PackageManager
 
 	cmd := state.PackageManager + " init -y"
 	console.Exec(cmd)
@@ -111,12 +114,16 @@ func Init(args *[]string) {
 }
 
 func Install(args *[]string) {
-	// TODO: accept package for install
-
 	console.Clear()
 
-	cmd := state.PackageManager + " install"
+	cmd := state.PackageManager + " install " + strings.Join(*args, " ")
 	console.Exec(cmd)
+}
+
+func List() {
+	console.Clear()
+
+	console.Exec(state.PackageManager + " list")
 }
 
 func RegisterAllCommands() {
@@ -130,5 +137,11 @@ func RegisterAllCommands() {
 		name:  "install|add",
 		desc:  "Install a package in your project.",
 		usage: "js-cli install <package>",
+	})
+
+	commands = append(commands, cmd{
+		name:  "list|l",
+		desc:  "List all installed packages.",
+		usage: "js-cli list",
 	})
 }

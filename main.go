@@ -4,13 +4,24 @@ import (
 	"os"
 
 	"github.com/Diegiwg/js-cli/pkg/cmd"
+	"github.com/Diegiwg/js-cli/pkg/config"
 	"github.com/Diegiwg/js-cli/pkg/console"
 	"github.com/Diegiwg/js-cli/pkg/state"
 )
 
 func command(arg string, args *[]string) {
 
-	state.Init()
+	state.CurrentDir, _ = os.Getwd()
+	state.CurrentConfigFile = state.CurrentDir + "\\.js-cli-config"
+	state.Runtime, state.PackageManager = config.LoadConfig()
+
+	if state.Runtime == "" {
+		state.Runtime = cmd.Runtime[0]
+	}
+
+	if state.PackageManager == "" {
+		state.PackageManager = cmd.PackageManager[0]
+	}
 
 	switch arg {
 	case "init", "i":
@@ -21,6 +32,11 @@ func command(arg string, args *[]string) {
 	case "install", "add":
 		{
 			cmd.Install(args)
+		}
+
+	case "list", "l":
+		{
+			cmd.List()
 		}
 
 	default:

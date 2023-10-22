@@ -3,15 +3,17 @@ package config
 import (
 	"os"
 	"strings"
+
+	"github.com/Diegiwg/js-cli/pkg/state"
 )
 
 // Save the runtime and package manager in a config file insider the project root
 func SaveConfig(rt string, pm string) {
 
 	// try to remove the old config file
-	_ = os.Remove(".js-cli-config")
+	_ = os.Remove(state.CurrentConfigFile)
 
-	file, err := os.OpenFile(".js-cli-config", os.O_SYNC|os.O_CREATE|os.O_RDWR, 0644)
+	file, err := os.OpenFile(state.CurrentConfigFile, os.O_SYNC|os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
 		panic(err)
 	}
@@ -26,8 +28,12 @@ func SaveConfig(rt string, pm string) {
 }
 
 func LoadConfig() (string, string) {
+	_, err := os.Stat(state.CurrentConfigFile)
+	if os.IsNotExist(err) {
+		return "", ""
+	}
 
-	file, err := os.ReadFile(".js-cli-config")
+	file, err := os.ReadFile(state.CurrentConfigFile)
 	if err != nil {
 		panic(err)
 	}
